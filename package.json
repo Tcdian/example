@@ -1,0 +1,28 @@
+{
+  "name": "@tcdian/type",
+  "version": "1.0.0",
+  "description": "judge type",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tcdian/type.git"
+  },
+  "keywords": [
+    "type",
+    "judge",
+    "typescript"
+  ],
+  "author": "tcdian",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Tcdian/type/issues"
+  },
+  "homepage": "https://github.com/Tcdian/type#readme",
+  "devDependencies": {
+    "tslint": "^5.16.0",
+    "typescript": "^3.4.4"
+  }
+}

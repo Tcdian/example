@@ -1,0 +1,7 @@
+# dependencies
+node_modules/
+source/
+.gitignore
+.npmignore
+tsconfig.json
+tslint.json
