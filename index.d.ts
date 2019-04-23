@@ -1,6 +1,8 @@
 import isArray from './isArray';
 import isBoolean from './isBoolean';
 import isDate from './isDate';
+import isEmpty from './isEmpty';
+import isError from './isError';
 import isFunction from './isFunction';
 import isMap from './isMap';
 import isNaN from './isNaN';
@@ -17,6 +19,8 @@ declare const _default: {
     isArray: typeof isArray;
     isBoolean: typeof isBoolean;
     isDate: typeof isDate;
+    isEmpty: typeof isEmpty;
+    isError: typeof isError;
     isFunction: typeof isFunction;
     isMap: typeof isMap;
     isNaN: typeof isNaN;

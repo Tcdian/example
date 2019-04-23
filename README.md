@@ -354,7 +354,7 @@ isFunction(Array.isArray)
     // => false
     ```
 
-> __Type__
+> __Others__
 - isEmpty(value)
   * Description
 

@@ -3,6 +3,7 @@ declare const _default: {
     AsyncFunction: string;
     Boolean: string;
     Date: string;
+    Error: string;
     Function: string;
     GeneratorFunction: string;
     Map: string;

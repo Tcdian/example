@@ -20,6 +20,8 @@ export default {
   isArray,
   isBoolean,
   isDate,
+  isEmpty,
+  isError,
   isFunction,
   isMap,
   isNaN,
