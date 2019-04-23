@@ -3,6 +3,7 @@ export default {
   AsyncFunction: '[object AsyncFunction]',
   Boolean: '[object Boolean]',
   Date: '[object Date]',
+  Error: '[object Error]',
   Function: '[object Function]',
   GeneratorFunction: '[object GeneratorFunction]',
   Map: '[object Map]',
