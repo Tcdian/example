@@ -2,6 +2,7 @@ import isArray from './isArray'
 import isBoolean from './isBoolean'
 import isDate from './isDate'
 import isEmpty from './isEmpty'
+import isEqual from './isEqual'
 import isError from './isError'
 import isFunction from './isFunction'
 import isMap from './isMap'
@@ -21,6 +22,7 @@ export default {
   isBoolean,
   isDate,
   isEmpty,
+  isEqual,
   isError,
   isFunction,
   isMap,
@@ -33,5 +35,5 @@ export default {
   isSet,
   isString,
   isSymbol,
-  isUndefined
+  isUndefined,
 }
