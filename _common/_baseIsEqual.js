@@ -1,6 +1,5 @@
 import _baseGetTypeTag from './_baseGetTypeTag';
 import _TYPE_TAG from '../_CONST/_TYPE_TAG';
-import _isObjectLike from './_isObjectLike';
 import isFunction from '../isFunction';
 import isUndefined from '../isUndefined';
 function _baseIsEqual(value, other, customizer, recordMap = new Map()) {
@@ -15,7 +14,7 @@ function _baseIsEqual(value, other, customizer, recordMap = new Map()) {
     if (value !== value) {
         return other !== other;
     }
-    if (_isObjectLike(value) && _isObjectLike(other)) {
+    if (valueType !== _TYPE_TAG.Function && typeof value !== 'object' && typeof other !== 'object') {
         return false;
     }
     // 包装对象
@@ -59,15 +58,34 @@ function _baseIsEqual(value, other, customizer, recordMap = new Map()) {
     recordMap.set(value, other);
     recordMap.set(other, value);
     let result;
-    if (valueType === _TYPE_TAG.Set || valueType === _TYPE_TAG.Map) {
-        const valueSetOrMapKeys = Array.from(value.keys());
-        const otherSetOrMapKeys = Array.from(other.keys());
-        result = valueSetOrMapKeys.every((valueKey) => {
+    if (valueType === _TYPE_TAG.Set) {
+        const valueSetKeys = Array.from(value.values());
+        const otherSetKeys = Array.from(other.values());
+        result = valueSetKeys.every((valueKey) => {
             const customizerFunc = isFunction(customizer) ? customizer : void 0;
-            const customizerResult = isUndefined(customizerFunc) ? void 0 : customizerFunc(value, other);
+            const customizerResult = isUndefined(customizerFunc)
+                ? void 0
+                : otherSetKeys.some((otherKey) => !!customizerFunc(valueKey, otherKey, valueKey, value, other, recordMap))
+                    ? true
+                    : void 0;
             return isUndefined(customizerResult)
-                ? otherSetOrMapKeys.some((otherKey) => {
-                    return _baseIsEqual(valueKey, otherKey, void 0) && _baseIsEqual(value.get(valueKey), value.get(otherKey), customizer);
+                ? otherSetKeys.some((otherKey) => {
+                    return _baseIsEqual(valueKey, otherKey, customizer, recordMap);
+                })
+                : customizerResult;
+        });
+    }
+    else if (valueType === _TYPE_TAG.Map) {
+        const valueMapKeys = Array.from(value.keys());
+        const otherMapKeys = Array.from(other.keys());
+        result = valueMapKeys.every((valueKey) => {
+            const customizerFunc = isFunction(customizer) ? customizer : void 0;
+            const customizerResult = isUndefined(customizerFunc)
+                ? void 0
+                : customizerFunc(value.get(valueKey), other.get(valueKey), valueKey, value, other, recordMap);
+            return isUndefined(customizerResult)
+                ? otherMapKeys.some((otherKey) => {
+                    return _baseIsEqual(valueKey, otherKey, void 0) && _baseIsEqual(value.get(valueKey), other.get(otherKey), customizer, recordMap);
                 })
                 : customizerResult;
         });
@@ -80,7 +98,9 @@ function _baseIsEqual(value, other, customizer, recordMap = new Map()) {
         }
         result = valueKeys.every((key) => {
             const customizerFunc = isFunction(customizer) ? customizer : void 0;
-            const customizerResult = isUndefined(customizerFunc) ? void 0 : customizerFunc(value, other);
+            const customizerResult = isUndefined(customizerFunc)
+                ? void 0
+                : customizerFunc(value[key], other[key], key, value, other, recordMap);
             return isUndefined(customizerResult)
                 ? otherKeys.includes(key) && _baseIsEqual(value[key], other[key], customizerFunc, recordMap)
                 : customizerResult;

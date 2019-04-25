@@ -1,4 +1,4 @@
-function _baseGetTypeTag(value) {
+function _baseGetTag(value) {
     return Object.prototype.toString.call(value);
 }
-export default _baseGetTypeTag;
+export default _baseGetTag;
