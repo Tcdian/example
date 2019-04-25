@@ -9,7 +9,7 @@ type TFunc = (...resArgs: any[]) => any
 type TIsEmptyArg = string | any[] | object | Map<any, any> | Set<any> | TFunc | null | undefined
 
 // Checks if value is an empty string, array, object, map, or set.
-function isEmpty(value: TIsEmptyArg): boolean | never {
+function isEmpty(value: TIsEmptyArg): boolean {
   if (isNil(value)) {
     return true
   }

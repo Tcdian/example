@@ -379,3 +379,43 @@ isFunction(Array.isArray)
     isEmpty({ 'a': 1 })
     // => false
     ```
+- isEqual(value, other, [customizer])
+  * Description
+
+    Performs a deep comparison between two values to determine if they are equivalent.
+  * Arguments
+
+    value (*): The value to compare.
+    other (*): The other value to compare.
+    [customizer] (Function): The function to customize comparisons.
+  * Returns
+
+    (boolean): Returns true if the values are equivalent, else false.
+  * Example
+    ```
+    const object = { 'a': 1 }
+    const other = { 'a': 1 }
+ 
+    isEqual(object, other)
+    => true
+ 
+    object === other
+    // => false
+
+    // with customizer
+    function isGreeting(value) {
+      return /^h(?:i|ello)$/.test(value)
+    }
+ 
+    function customizer(objValue, othValue) {
+      if (isGreeting(objValue) && isGreeting(othValue)) {
+        return true
+      }
+    }
+    
+    const array = ['hello', 'goodbye']
+    const other = ['hi', 'goodbye']
+    
+    isEqual(array, other, customizer)
+    // => true
+    ```
