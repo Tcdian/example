@@ -9,8 +9,16 @@ test(`isEqual(null, Object(null)) => ${_isEqualWith(null, Object(null))}`, () =>
   expect(isEqual(null, Object(null))).toEqual(_isEqualWith(null, Object(null)))
 })
 
+test(`isEqual(['a', 'b', 'c'], ['a']) => ${_isEqualWith(['a', 'b', 'c'], ['a'])}`, () => {
+  expect(isEqual(['a', 'b', 'c'], ['a'])).toEqual(_isEqualWith(['a', 'b', 'c'], ['a']))
+})
+
 test(`isEqual({a: 1}, {a: 1}) => ${_isEqualWith({a: 1}, {a: 1})}`, () => {
     expect(isEqual({a: 1}, {a: 1})).toEqual(_isEqualWith({a: 1}, {a: 1}))
+})
+
+test(`isEqual(['a'], {1: 'a'}) => ${_isEqualWith(['a'], {1: 'a'})}`, () => {
+  expect(isEqual(['a'], {1: 'a'})).toEqual(_isEqualWith(['a'], {1: 'a'}))
 })
 
 test(`isEqual(new Set(), new Set()) => ${_isEqualWith(new Set(), new Set())}`, () => {

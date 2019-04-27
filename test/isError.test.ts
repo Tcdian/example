@@ -8,4 +8,3 @@ test(`isError(new Error('error')) => ${_isError(new Error('error'))}`, () => {
 test(`isError(Error) => ${_isError(Error)}`, () => {
   expect(isError(Error)).toEqual(_isError(Error))
 })
-
