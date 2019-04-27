@@ -1,6 +1,6 @@
 {
   "name": "@tcdian/is",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Micro check library",
   "main": "index.js",
   "scripts": {

@@ -6,7 +6,7 @@ import isNil from './isNil'
 import isObject from './isObject'
 
 type TFunc = (...resArgs: any[]) => any
-type TIsEmptyArg = string | any[] | object | Map<any, any> | Set<any> | TFunc | null | undefined
+type TIsEmptyArg = string | any[] | object | Map<any, any> | Set<any> | TFunc
 
 // Checks if value is an empty string, array, object, map, or set.
 function isEmpty(value: TIsEmptyArg): boolean {
