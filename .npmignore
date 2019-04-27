@@ -2,7 +2,7 @@
 node_modules/
 source/
 test/
-jset.config.js
+jest.config.js
 .gitignore
 .npmignore
 tsconfig.json
