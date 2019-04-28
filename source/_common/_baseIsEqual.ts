@@ -5,7 +5,7 @@ import isFunction from '../isFunction'
 import isUndefined from '../isUndefined'
 
 type PropertyName = string | number | symbol
-type TIsEqualCustomizer = (value: any, other: any, indexOrKey?: any, collection?: any, otherCollection?: any, stack?: Map<any, any>) => boolean
+type TIsEqualCustomizer = (value: any, other: any, valueIndexOrKey?: any, otherIndexOrKey?: any, collection?: any, otherCollection?: any, stack?: Map<any, any>) => boolean
 
 function _baseIsEqual(value: any, other: any, customizer?: TIsEqualCustomizer, recordMap: Map<any, any> = new Map()): boolean {
   const valueType: string = _baseGetTypeTag(value)
@@ -76,41 +76,36 @@ function _baseIsEqual(value: any, other: any, customizer?: TIsEqualCustomizer, r
 
   let result: boolean
 
-  if (valueType === _TYPE_TAG.Set) {
-    const valueSetKeys: any[] = Array.from(value.values())
-    const otherSetKeys: any[] = Array.from(other.values())
-    result = valueSetKeys.every((valueKey) => {
-      let notUndefinedKeyCustomizerResult: boolean = void 0
+  if (valueType === _TYPE_TAG.Set || valueType === _TYPE_TAG.Map) {
+    const valueKeys: any[] = Array.from(value.values())
+    const otherKeys: any[] = Array.from(other.values())
+
+    if (valueKeys.length !== otherKeys.length) {
+      return false
+    }
+    
+    result = valueKeys.every((valueKey) => {
       const customizerFunc: TIsEqualCustomizer = isFunction(customizer) ? customizer : void 0
-      const customizerResult: boolean = isUndefined(customizerFunc) 
-        ? void 0 
-        : otherSetKeys.every((otherKey) => {
-            const otherKeyCustomizerResult: boolean = customizerFunc(valueKey, otherKey, valueKey, value, other, recordMap)
-            if (!isUndefined(otherKeyCustomizerResult)) {
-              notUndefinedKeyCustomizerResult = otherKeyCustomizerResult
-            }
-            return isUndefined(otherKeyCustomizerResult)
-          })
-          ? void 0
-          : notUndefinedKeyCustomizerResult
+      let exitCustomizerResult: boolean
+      const valueValue = valueType === _TYPE_TAG.Set ? valueKey : value.get(valueKey)
+      const customizerResult: boolean = isUndefined(customizerFunc)
+        ? void 0
+        : otherKeys.some((otherKey) => {
+          const otherValue = valueType === _TYPE_TAG.Set ? otherKey : other.get(otherKey)
+          const currentkeyCustomizerResult: boolean = customizerFunc(valueValue, otherValue, valueKey, otherKey, value, other, recordMap)
+          if (_baseIsEqual(valueKey, otherKey, customizer, recordMap) && !isUndefined(currentkeyCustomizerResult)) {
+            exitCustomizerResult = currentkeyCustomizerResult
+            return true
+          }
+          return false
+        })
+          ? exitCustomizerResult
+          : void 0
       return isUndefined(customizerResult)
-        ? otherSetKeys.some((otherKey) => {
-            return _baseIsEqual(valueKey, otherKey, customizer, recordMap)
-          })
-        : customizerResult
-    })
-  } else if (valueType === _TYPE_TAG.Map) {
-    const valueMapKeys: any[] = Array.from(value.keys())
-    const otherMapKeys: any[] = Array.from(other.keys())
-    result = valueMapKeys.every((valueKey) => {
-      const customizerFunc: TIsEqualCustomizer = isFunction(customizer) ? customizer : void 0
-      const customizerResult: boolean = isUndefined(customizerFunc) 
-        ? void 0 
-        : customizerFunc(value.get(valueKey), other.get(valueKey), valueKey, value, other, recordMap)
-      return isUndefined(customizerResult)
-        ? otherMapKeys.some((otherKey) => {
-            return _baseIsEqual(valueKey, otherKey, void 0) && _baseIsEqual(value.get(valueKey), other.get(otherKey), customizer, recordMap)
-          })
+        ? otherKeys.some((otherKey) => {
+          const otherValue = valueType === _TYPE_TAG.Set ? otherKey : other.get(otherKey)
+          return _baseIsEqual(valueKey, otherKey, customizer, recordMap) && _baseIsEqual(valueValue, otherValue, customizer, recordMap)
+        })
         : customizerResult
     })
   } else {
@@ -126,7 +121,7 @@ function _baseIsEqual(value: any, other: any, customizer?: TIsEqualCustomizer, r
       const customizerFunc: TIsEqualCustomizer = isFunction(customizer) ? customizer : void 0
       const customizerResult: boolean = isUndefined(customizerFunc) 
         ? void 0 
-        : customizerFunc(value[key], other[key], key, value, other, recordMap)
+        : customizerFunc(value[key], other[key], key, key, value, other, recordMap)
       return isUndefined(customizerResult) 
         ? otherKeys.includes(key) && _baseIsEqual(value[key], other[key], customizerFunc, recordMap) 
         : customizerResult

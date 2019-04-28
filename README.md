@@ -382,7 +382,9 @@ isFunction(Array.isArray)
 - isEqual(value, other, [customizer])
   * Description
 
-    Performs a deep comparison between two values to determine if they are equivalent.
+    Performs a deep comparison between two values to determine if they are equivalent. it accepts customizer which is invoked to compare values. 
+    If customizer returns undefined, comparisons are handled by the method instead. 
+    The customizer is invoked with up to 7 arguments: (objValue, othValue [, ojbIndex|key, othIndex|key, object, other, stack]).
   * Arguments
 
     value (*): The value to compare.

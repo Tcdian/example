@@ -2,7 +2,7 @@ import _baseIsEqual from './_common/_baseIsEqual'
 import isFunction from './isFunction'
 import isUndefined from './isUndefined'
 
-type TIsEqualCustomizer = (value: any, other: any, indexOrKey?: any, collection?: any, otherCollection?: any, stack?: Map<any, any>) => boolean
+type TIsEqualCustomizer = (value: any, other: any, valueIndexOrKey?: any, otherIndexOrKey?: any, collection?: any, otherCollection?: any, stack?: Map<any, any>) => boolean
 
 function isEqual(value: any, other: any, customizer?: TIsEqualCustomizer): boolean {
   const customizerFunc: TIsEqualCustomizer = isFunction(customizer) ? customizer : void 0

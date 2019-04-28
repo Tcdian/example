@@ -58,41 +58,33 @@ function _baseIsEqual(value, other, customizer, recordMap = new Map()) {
     recordMap.set(value, other);
     recordMap.set(other, value);
     let result;
-    if (valueType === _TYPE_TAG.Set) {
-        const valueSetKeys = Array.from(value.values());
-        const otherSetKeys = Array.from(other.values());
-        result = valueSetKeys.every((valueKey) => {
-            let notUndefinedKeyCustomizerResult = void 0;
+    if (valueType === _TYPE_TAG.Set || valueType === _TYPE_TAG.Map) {
+        const valueKeys = Array.from(value.values());
+        const otherKeys = Array.from(other.values());
+        if (valueKeys.length !== otherKeys.length) {
+            return false;
+        }
+        result = valueKeys.every((valueKey) => {
             const customizerFunc = isFunction(customizer) ? customizer : void 0;
+            let exitCustomizerResult;
+            const valueValue = valueType === _TYPE_TAG.Set ? valueKey : value.get(valueKey);
             const customizerResult = isUndefined(customizerFunc)
                 ? void 0
-                : otherSetKeys.every((otherKey) => {
-                    const otherKeyCustomizerResult = customizerFunc(valueKey, otherKey, valueKey, value, other, recordMap);
-                    if (!isUndefined(otherKeyCustomizerResult)) {
-                        notUndefinedKeyCustomizerResult = otherKeyCustomizerResult;
+                : otherKeys.some((otherKey) => {
+                    const otherValue = valueType === _TYPE_TAG.Set ? otherKey : other.get(otherKey);
+                    const currentkeyCustomizerResult = customizerFunc(valueValue, otherValue, valueKey, otherKey, value, other, recordMap);
+                    if (_baseIsEqual(valueKey, otherKey, customizer, recordMap) && !isUndefined(currentkeyCustomizerResult)) {
+                        exitCustomizerResult = currentkeyCustomizerResult;
+                        return true;
                     }
-                    return isUndefined(otherKeyCustomizerResult);
+                    return false;
                 })
-                    ? void 0
-                    : notUndefinedKeyCustomizerResult;
+                    ? exitCustomizerResult
+                    : void 0;
             return isUndefined(customizerResult)
-                ? otherSetKeys.some((otherKey) => {
-                    return _baseIsEqual(valueKey, otherKey, customizer, recordMap);
-                })
-                : customizerResult;
-        });
-    }
-    else if (valueType === _TYPE_TAG.Map) {
-        const valueMapKeys = Array.from(value.keys());
-        const otherMapKeys = Array.from(other.keys());
-        result = valueMapKeys.every((valueKey) => {
-            const customizerFunc = isFunction(customizer) ? customizer : void 0;
-            const customizerResult = isUndefined(customizerFunc)
-                ? void 0
-                : customizerFunc(value.get(valueKey), other.get(valueKey), valueKey, value, other, recordMap);
-            return isUndefined(customizerResult)
-                ? otherMapKeys.some((otherKey) => {
-                    return _baseIsEqual(valueKey, otherKey, void 0) && _baseIsEqual(value.get(valueKey), other.get(otherKey), customizer, recordMap);
+                ? otherKeys.some((otherKey) => {
+                    const otherValue = valueType === _TYPE_TAG.Set ? otherKey : other.get(otherKey);
+                    return _baseIsEqual(valueKey, otherKey, customizer, recordMap) && _baseIsEqual(valueValue, otherValue, customizer, recordMap);
                 })
                 : customizerResult;
         });
@@ -108,7 +100,7 @@ function _baseIsEqual(value, other, customizer, recordMap = new Map()) {
             const customizerFunc = isFunction(customizer) ? customizer : void 0;
             const customizerResult = isUndefined(customizerFunc)
                 ? void 0
-                : customizerFunc(value[key], other[key], key, value, other, recordMap);
+                : customizerFunc(value[key], other[key], key, key, value, other, recordMap);
             return isUndefined(customizerResult)
                 ? otherKeys.includes(key) && _baseIsEqual(value[key], other[key], customizerFunc, recordMap)
                 : customizerResult;
