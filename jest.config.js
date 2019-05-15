@@ -7,7 +7,8 @@ module.exports = {
   "moduleFileExtensions": [
     "ts",
     "tsx",
-    "js"
+    "js",
+    "jsx"
   ],
   "coveragePathIgnorePatterns": [
     "/node_modules/",
