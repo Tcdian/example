@@ -1,9 +1,0 @@
-# dependencies
-node_modules/
-source/
-test/
-jest.config.js
-.gitignore
-.npmignore
-tsconfig.json
-tslint.json
