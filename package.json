@@ -2,14 +2,14 @@
   "name": "@tcdian/is",
   "version": "1.1.1",
   "description": "Micro check library",
-  "main": "dist",
+  "main": "lib/index.js",
   "directories": {
     "test": "test"
   },
   "scripts": {
     "test": "jest --verbose",
     "test:watch": "jest --coverage --watch",
-    "build": "rm -rf ./dist && tsc"
+    "build": "rm -rf ./lib && tsc"
   },
   "repository": {
     "type": "git",

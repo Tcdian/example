@@ -9,7 +9,7 @@ npm i @tcdian/is
 - 仅支持ESModules方式引入
 
 ```
-// 全体引入， 然后你可以使用is上的function
+// 全体引入， 然后你可以使用 is 的 function
 
 import is from '@tcdian/is'
 
