@@ -1,10 +1,10 @@
 # React TypeScript Examples
 
-## Hooks
+## Hooks 基础
 
 ### useState
 
-大多数情况想我们使用类型推断：
+大多数情况下使用类型推断：
 
 [View in CodeSandbox](https://codesandbox.io/s/typescript-usestate-example-xyvnj?file=/src/counter.tsx)
 
@@ -22,55 +22,35 @@ function Counter() {
 }
 ```
 
-还有一些情况我们以 null 作为初始值，我们需要先声明类型：
+还有一些情况，比如初始 state 为空，需要先声明类型：
 
-[View in CodeSandbox](https://codesandbox.io/s/typescript-usestate-example-xyvnj?file=/src/theme.tsx)
+[View in CodeSandbox](https://codesandbox.io/s/typescript-usestate-example-xyvnj?file=/src/list.tsx)
 
 ```tsx
-interface ThemeStyle {
-    foreground: string;
-    background: string;
+interface Item {
+    id: number;
     // ...
 }
 
-const themes = {
-    light: {
-        foreground: '#000000',
-        background: '#eeeeee',
-    },
-    dark: {
-        foreground: '#ffffff',
-        background: '#222222',
-    },
-};
+let uniq = 0;
 
-function Theme() {
-    const [theme, setTheme] = useState<ThemeStyle>(null);
+function List() {
+    const [list, setList] = useState<Item[]>([]);
 
     return (
         <>
-            <div
-                style={
-                    theme
-                        ? {
-                              background: theme.background,
-                              color: theme.foreground,
-                          }
-                        : {}
-                }
-            >
-                Theme Style
-            </div>
-            <button onClick={() => setTheme(themes.light)}>Light</button>
-            <button onClick={() => setTheme(themes.dark)}>Dark</button>
+            <ul>
+                {list.map(({ id }) => (
+                    <li key={id}>{id}</li>
+                ))}
+            </ul>
+            <button onClick={() => setList((prevList) => [...prevList, { id: uniq++ }])}>Add</button>
         </>
     );
 }
 ```
 
 ### useContext
-
-useContext 使用示例：
 
 [View in CodeSandbox](https://codesandbox.io/s/typescript-usecontext-example-2q3q9)
 
@@ -92,7 +72,7 @@ const themes = {
     },
 };
 
-const ThemeContext = React.createContext<Theme | null>(null);
+const ThemeContext = React.createContext<Theme>(null);
 
 function App() {
     return (
@@ -114,8 +94,6 @@ function Button() {
 ```
 
 ### useReducer
-
-useReducer 使用示例：
 
 [View in CodeSandbox](https://codesandbox.io/s/typescript-usereducer-example-meue3)
 
@@ -167,8 +145,6 @@ function App() {
 
 #### useRef
 
-useRef 使用示例：
-
 [View in CodeSandbox](https://codesandbox.io/s/typescript-useref-example-gwhmj)
 
 ```tsx
@@ -187,3 +163,5 @@ function App() {
     );
 }
 ```
+
+## 实践
