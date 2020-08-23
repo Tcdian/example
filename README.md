@@ -1,4 +1,4 @@
-# React TypeScript Examples
+# React TypeScript Examples (用例多数来自 React 官网)
 
 ## Hooks 基础
 
@@ -9,8 +9,13 @@
 [View in CodeSandbox](https://codesandbox.io/s/typescript-usestate-example-xyvnj?file=/src/counter.tsx)
 
 ```tsx
-function Counter() {
-    const [count, setCount] = useState(0); // count 将被推断为 number 类型
+import * as React from 'react';
+
+const { useState } = React;
+
+export function Counter() {
+    const [count, setCount] = useState(0);
+
     return (
         <>
             <div>Count: {count}</div>
@@ -27,6 +32,10 @@ function Counter() {
 [View in CodeSandbox](https://codesandbox.io/s/typescript-usestate-example-xyvnj?file=/src/list.tsx)
 
 ```tsx
+import * as React from 'react';
+
+const { useState } = React;
+
 interface Item {
     id: number;
     // ...
@@ -34,7 +43,7 @@ interface Item {
 
 let uniq = 0;
 
-function List() {
+export function List() {
     const [list, setList] = useState<Item[]>([]);
 
     return (
@@ -55,6 +64,10 @@ function List() {
 [View in CodeSandbox](https://codesandbox.io/s/typescript-usecontext-example-2q3q9)
 
 ```tsx
+// App.tsx
+import * as React from 'react';
+import { Toolbar } from './toolbar';
+
 interface Theme {
     foreground: string;
     background: string;
@@ -72,19 +85,37 @@ const themes = {
     },
 };
 
-const ThemeContext = React.createContext<Theme>(null);
+export const ThemeContext = React.createContext<Theme>(null);
 
-function App() {
+export function App() {
     return (
         <div className="App">
             <ThemeContext.Provider value={themes.dark}>
-                <Button />
+                <Toolbar />
             </ThemeContext.Provider>
         </div>
     );
 }
 
-function Button() {
+// toolbar.tsx
+import * as React from 'react';
+import { ThemedButton } from './themedButton';
+
+export function Toolbar() {
+    return (
+        <div>
+            <ThemedButton />
+        </div>
+    );
+}
+
+// themedButton.tsx
+import * as React from 'react';
+import { ThemeContext } from './App';
+
+const { useContext } = React;
+
+export function ThemedButton() {
     const theme = useContext(ThemeContext);
 
     return (
@@ -98,17 +129,18 @@ function Button() {
 [View in CodeSandbox](https://codesandbox.io/s/typescript-usereducer-example-meue3)
 
 ```tsx
-interface AppState {
+// reducer.ts
+export interface HelloState {
     title: string;
 }
 
-type Action = { type: 'SET_TITLE'; payload: string } | { type: 'CLEAR_TITLE' };
+export type Action = { type: 'SET_TITLE'; payload: string } | { type: 'CLEAR_TITLE' };
 
-const initialState: AppState = {
+export const initialState: HelloState = {
     title: 'CodeSandbox',
 };
 
-function reducer(state: AppState, action: Action): AppState {
+export function reducer(state: HelloState, action: Action): HelloState {
     switch (action.type) {
         case 'SET_TITLE':
             return { ...state, title: action.payload };
@@ -119,11 +151,17 @@ function reducer(state: AppState, action: Action): AppState {
     }
 }
 
-function App() {
+// Hello.tsx
+import * as React from 'react';
+import { reducer, initialState } from './reducer';
+
+const { useReducer } = React;
+
+export function Hello() {
     const [state, dispatch] = useReducer(reducer, initialState);
 
     return (
-        <div className="App">
+        <>
             <h1>Hello {state.title}</h1>
             <input
                 value={state.title}
@@ -138,7 +176,7 @@ function App() {
             >
                 clear
             </button>
-        </div>
+        </>
     );
 }
 ```
@@ -148,7 +186,11 @@ function App() {
 [View in CodeSandbox](https://codesandbox.io/s/typescript-useref-example-gwhmj)
 
 ```tsx
-function App() {
+import * as React from 'react';
+
+const { useRef } = React;
+
+export function TextInput() {
     const inputEl = useRef<HTMLInputElement>(null);
 
     function onButtonClick(): void {
@@ -156,12 +198,65 @@ function App() {
     }
 
     return (
-        <div className="App">
-            <input ref={inputEl} type="text" className="input" />
+        <>
+            <input ref={inputEl} type="text" />
             <button onClick={onButtonClick}>Focus the input</button>
-        </div>
+        </>
     );
 }
 ```
 
 ## 实践
+
+### 使用 Hook 进行数据获取
+
+[View in CodeSandbox](https://codesandbox.io/s/typescript-useeffect-data-fetch-ns5of)
+
+```tsx
+import * as React from 'react';
+import axios from 'axios';
+
+const { useState, useEffect } = React;
+
+interface Data {
+    hits: Item[];
+}
+
+interface Item {
+    objectID: string;
+    title: string;
+    url: string;
+}
+
+export function SearchResults() {
+    const [data, setData] = useState<Data>({ hits: [] });
+    const [query, setQuery] = useState('react');
+
+    useEffect(() => {
+        let ignore = false;
+
+        async function fetchData() {
+            const result = await axios('https://hn.algolia.com/api/v1/search?query=' + query);
+            if (!ignore) setData(result.data);
+        }
+
+        fetchData();
+        return () => {
+            ignore = true;
+        };
+    }, [query]);
+
+    return (
+        <>
+            <input value={query} onChange={(e) => setQuery(e.target.value)} />
+            <ul>
+                {data.hits.map((item) => (
+                    <li key={item.objectID}>
+                        <a href={item.url}>{item.title}</a>
+                    </li>
+                ))}
+            </ul>
+        </>
+    );
+}
+```
